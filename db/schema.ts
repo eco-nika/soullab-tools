@@ -29,3 +29,15 @@ export const learningFeedbackEmbeddings = sqliteTable('agent_learning_feedback_e
   model: text('model').notNull(), dims: integer('dims').notNull(), embedding: text('embedding').notNull(),
   createdAt: text('created_at').notNull(),
 });
+
+// Append-only, selected learning records. Runtime data stays in D1, never in Git.
+export const learningRecords = sqliteTable('agent_learning_records', {
+  id: text('id').primaryKey(),
+  kind: text('kind').notNull(),
+  scope: text('scope').notNull(),
+  audience: text('audience').notNull(),
+  taskKey: text('task_key').notNull(),
+  fingerprint: text('fingerprint').notNull().unique(),
+  payload: text('payload').notNull(),
+  createdAt: text('created_at').notNull(),
+}, t => [check('learning_record_kind', sql`${t.kind} IN ('run','feedback','candidate','rubric','experiment','decision','retirement')`)]);

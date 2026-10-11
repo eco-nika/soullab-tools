@@ -66,3 +66,6 @@ next-env.d.ts
 *.bundle.b64
 *.sqlite*
 *.db
+
+# Private learning context, results and metric evidence
+/.learning/

@@ -90,3 +90,9 @@ git tag -a v0.2-prompt-recommender -m "v0.2: launch free job-based AI prompt rec
 - 기존 주문 백업의 다섯 필드 허용 목록은 유지합니다. 환경변수나 결제 비밀값을 임베딩·학습 자료·챗봇 답변에 포함하지 않습니다.
 
 검증: `node scripts/prepare-knowledge.mjs --check`와 `node --test tests/*.test.mjs`. 실제 SQLite 스키마·벡터 저장·중복 방지·상품 근거 검색·범위 밖 질문·채팅 비저장을 확인합니다.
+
+## 공통 피드백·자가 개선 구조 (소스 준비, 운영 미배포)
+
+`AGENTS.md` → [작업 인계](docs/learning/HANDOFF.md) → [운영 규약](docs/learning/PROTOCOL.md)을 읽습니다. GitHub는 코드·기준·인계 원본, Sites D1은 선별 결과·피드백·학습 이력 원본입니다. 기존 예제와 별도로 `agent_learning_records`와 인증된 `/api/agent-learning`, `/mcp`를 추가했습니다. 단순 저장·검색을 실제 반영·성과 개선으로 표시하지 않습니다.
+
+검증: `node --test tests/*.test.mjs`. 도구 공통 실행기는 `automation/learning/client.mjs`, GitHub 최신성 확인은 `automation/learning/source-status.mjs`입니다. 현재 작업은 사이트를 재게시하지 않으므로 새 경로·마이그레이션·비밀 설정·MCP 연결은 후속 운영 적용 대상입니다. [전후 점검](docs/learning/AUDIT-2026-10-12.md)을 참고하세요.

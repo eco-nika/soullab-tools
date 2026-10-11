@@ -32,9 +32,9 @@ export async function knowledgeOverview(env){const rows=await knowledgeRows(env)
 export async function learningOverview(env){
   await ensureKnowledge(env);
   const [g,f,e]=await Promise.all([
-    env.DB.prepare('SELECT id,goal,is_sample,model,dims,embedding,created_at FROM agent_learning_goals ORDER BY id').all(),
-    env.DB.prepare('SELECT id,goal_id,draft,rating,reason,is_sample,created_at FROM agent_learning_feedback ORDER BY id').all(),
-    env.DB.prepare('SELECT id,feedback_id,model,dims,embedding,created_at FROM agent_learning_feedback_embeddings ORDER BY id').all(),
+    env.DB.prepare('SELECT id,goal,is_sample,model,dims,embedding,created_at FROM agent_learning_goals WHERE is_sample=1 ORDER BY id').all(),
+    env.DB.prepare('SELECT id,goal_id,draft,rating,reason,is_sample,created_at FROM agent_learning_feedback WHERE is_sample=1 ORDER BY id').all(),
+    env.DB.prepare('SELECT id,feedback_id,model,dims,embedding,created_at FROM agent_learning_feedback_embeddings WHERE feedback_id IN (SELECT id FROM agent_learning_feedback WHERE is_sample=1) ORDER BY id').all(),
   ]);
   return {schema:'agent_learning_ (D1 테이블 접두어)',tables:TABLES,model:MODEL,dims:DIMS,testOnly:true,goals:(g.results||[]).map(summary),feedback:f.results||[],feedbackEmbeddings:(e.results||[]).map(summary)};
 }

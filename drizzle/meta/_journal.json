@@ -15,6 +15,13 @@
       "when": 1791748070823,
       "tag": "0001_talented_ricochet",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1791749802256,
+      "tag": "0002_aromatic_kate_bishop",
+      "breakpoints": true
     }
   ]
 }
