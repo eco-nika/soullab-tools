@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="출강 문의를 회신 메일, 교시별 커리큘럼, 준비물 체크리스트로 정리하는 소울랩의 브라우저 전용 도구.">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'">
+  <title>소울랩 출강 문의 회신 자동 작성기</title>
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="/tools.css">
+  <script src="generator.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<header class="topbar"><a class="wordmark" href="#">Soul;Lab<span>강사의 시간을, 더 가치 있게.</span></a><span class="private-badge"><span class="dot"></span> 브라우저 안에서만 작성</span></header>
+<main>
+  <section class="hero" aria-labelledby="page-title">
+    <div><p class="eyebrow">SOUL;LAB TEACHING TOOL / 01</p><h1 id="page-title"><span>소울랩 출강 문의</span><br>회신 자동 작성기<span class="title-dot">.</span></h1><p class="intro">문의 내용만 입력하세요.<br>정중한 회신부터 수업 계획까지, 한 번에 준비합니다.</p></div>
+    <div class="hero-note"><span class="note-label">한 번의 입력으로</span><div><b>01</b><span>회신 메일 초안</span><span>↗</span></div><div><b>02</b><span>교시별 커리큘럼</span><span>↗</span></div><div><b>03</b><span>준비물 체크리스트</span><span>↗</span></div><p>작성 → 검토 → 복사 → 회신</p></div>
+  </section>
+  <a class="tool-link-card" href="/prompts"><span class="free-pill">새 무료 도구</span><br><strong>직무별 AI 프롬프트 추천기 →</strong><p>광고 · 방송 · IT 기획 · 소상공인 | 직무와 과제에 맞는 프롬프트 3개를 바로 복사하세요.</p></a>
+  <div class="workspace">
+    <section class="form-panel" aria-labelledby="form-title">
+      <div class="section-heading"><div><span class="step-label">STEP 01</span><h2 id="form-title">출강 문의 입력</h2></div><span class="required-note">* 필수 항목</span></div>
+      <form id="inquiry" autocomplete="off">
+        <div class="field"><label for="institution">기관명 <span>*</span></label><input id="institution" name="institution" required maxlength="100" placeholder="예: ○○소상공인지원센터" autocomplete="off"></div>
+        <div class="field"><label for="contact">담당자 이름</label><input id="contact" name="contact" maxlength="60" placeholder="예: 김담당 (모르면 비워 두세요)" autocomplete="off"></div>
+        <div class="field-row"><div class="field"><label for="audience">교육 대상</label><select id="audience" name="audience"><option>소상공인</option><option>재직자</option><option>공무원</option><option>대학생</option></select></div><div class="field"><label for="people">인원</label><div class="input-unit"><input id="people" name="people" type="number" min="1" max="10000" step="1" placeholder="미정"><span>명</span></div></div></div>
+        <div class="field-row"><div class="field"><label for="date">희망 날짜</label><input id="date" name="date" type="date"><small>미정이면 비워 두세요.</small></div><div class="field"><label for="hours">교육 시간</label><select id="hours" name="hours"><option value="2">2시간</option><option value="3" selected>3시간</option><option value="4">4시간</option><option value="8">8시간</option></select></div></div>
+        <div class="field"><label for="topic">교육 주제</label><select id="topic" name="topic"><option>AI 마케팅</option><option>AI 업무 자동화</option><option>캔바 콘텐츠 제작</option><option>퍼스널 브랜딩</option></select></div>
+        <fieldset class="mode-field"><legend>진행 방식</legend><div class="mode-options"><label><input type="radio" name="mode" value="대면" checked><span>대면</span></label><label><input type="radio" name="mode" value="온라인"><span>온라인</span></label></div></fieldset>
+        <div class="field"><label for="request">요청 사항 <span class="optional">선택</span></label><textarea id="request" name="request" rows="4" maxlength="2000" placeholder="예: AI 초보자 중심, 우리 가게 홍보 문구 실습 희망"></textarea><small>요청 내용은 초안에 그대로 포함됩니다. 반영 가능 여부는 발송 전에 확인해 주세요.</small></div>
+        <button class="generate" type="submit">회신 만들기 <span aria-hidden="true">→</span></button>
+        <button class="reset" type="reset">입력과 결과 모두 지우기</button>
+        <p class="privacy-note">입력 내용은 저장·전송되지 않습니다.<br>새로고침하거나 페이지를 닫으면 사라집니다.</p>
+      </form>
+    </section>
+    <section class="results-panel" aria-labelledby="results-title">
+      <div class="section-heading"><div><span class="step-label">STEP 02</span><h2 id="results-title" tabindex="-1">회신 초안 확인</h2></div><span id="result-badge" class="result-badge">작성 대기</span></div>
+      <div id="empty-state" class="empty-state"><div class="paper-icon" aria-hidden="true"><span></span><span></span><span></span><b>✦</b></div><h3>다음 회신은, 조금 더 가볍게.</h3><p>왼쪽의 문의 내용을 입력하고<br><strong>회신 만들기</strong>를 눌러 주세요.</p><div class="empty-tags"><span>메일 초안</span><span>수업 계획</span><span>준비물</span></div></div>
+      <div id="output" hidden>
+        <p id="summary" class="summary"></p><p id="stale" class="stale" hidden>입력 내용이 바뀌었습니다. ‘회신 만들기’를 다시 눌러 주세요.</p>
+        <div class="review-note">발송 전 희망 일정·강사료·요청 사항을 확인해 주세요. 아래 내용은 선택한 조건에 맞춘 템플릿 초안입니다.</div>
+        <article class="result-card"><div class="card-header"><h3><span>01</span> 회신 메일 초안</h3><button type="button" class="copy" data-copy="email" aria-label="회신 메일 초안 복사">복사</button></div><pre id="email-output"></pre></article>
+        <article class="result-card"><div class="card-header"><h3><span>02</span> 교시별 커리큘럼</h3><button type="button" class="copy" data-copy="curriculum" aria-label="교시별 커리큘럼 복사">복사</button></div><p id="curriculum-note" class="table-note"></p><div class="table-scroll" tabindex="0" role="region" aria-label="교시별 커리큘럼 표, 좁은 화면에서 좌우로 이동 가능"><table><caption class="sr-only">교육 시간에 맞춘 교시별 커리큘럼</caption><thead><tr><th scope="col">교시·시간</th><th scope="col">학습·실습 내용</th><th scope="col">완성할 결과물</th></tr></thead><tbody id="curriculum-body"></tbody></table></div></article>
+        <article class="result-card"><div class="card-header"><h3><span>03</span> 준비물 체크리스트</h3><button type="button" class="copy" data-copy="checklist" aria-label="준비물 체크리스트 복사">복사</button></div><div id="checklist-output" class="checklist"></div></article>
+        <p class="output-footnote">복사한 초안은 메일이나 문서에 붙여넣어 수정할 수 있습니다.</p>
+      </div>
+    </section>
+  </div>
+  <section class="store" id="store" aria-labelledby="store-title">
+    <div class="section-heading"><div><span class="step-label">SOUL;LAB STORE</span><h2 id="store-title">소울랩 스토어(테스트 결제)</h2></div><span class="result-badge">TEST ONLY</span></div>
+    <div class="product-card"><div class="product-cover" aria-hidden="true"><span>SOUL;LAB</span><b>일하는 나를 위한<br>AI PROMPTS</b><span>직무별 프롬프트 모음집 · PDF</span></div><div class="product-info"><span class="step-label">DIGITAL GUIDE · PDF</span><h3>직무별 AI 프롬프트 모음집 PDF</h3><p>직무별 업무에 활용하는 AI 프롬프트 모음집.<br>토스페이먼츠 테스트 결제 흐름을 체험해 보세요.</p><strong class="price">19,000<span>원</span></strong><div class="pay-action"><a class="store-button" href="/checkout.html" target="_blank" rel="noopener noreferrer">테스트 결제하기 <span aria-hidden="true">↗</span></a><strong class="test-notice">테스트 결제입니다.<br>실제로 결제되지 않습니다.</strong></div><p class="store-footnote">결제는 새 탭에서 진행합니다. 회신 입력 내용은 결제 서비스로 전달하지 않습니다.<br>결제 연동 확인용으로, 실제 PDF 파일은 제공되지 않습니다.</p></div></div>
+  </section>
+<div class="tool-actions"><a class="secondary-button" href="/admin">테스트 주문 관리</a><a class="secondary-button" href="/admin/backup">DB 백업</a></div></main>
+<footer><a href="https://soullab.kr" target="_blank" rel="noopener noreferrer">Soul;Lab · soullab.kr <span aria-hidden="true">↗</span></a><span>좋은 수업을 준비하는 작은 도구</span></footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
