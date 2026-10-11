@@ -7,6 +7,9 @@
 - 주문 관리: `/admin`
 - CSV·JSON 백업: `/admin/backup`
 - 테스트 스토어: `/#store`
+- 소울랩 안내 챗봇: `/chat`
+- 지식 임베딩 확인: `/admin/embeddings`
+- 학습 목표·피드백 예제: `/admin/learning`
 
 ## 테스트 데이터 전용
 
@@ -70,3 +73,20 @@ git worktree add -b feature/prompt-recommender ../soullab-prompt-recommender
 git merge --no-ff feature/prompt-recommender -m "Merge feature/prompt-recommender: launch free job-based AI prompt recommender (v0.2)"
 git tag -a v0.2-prompt-recommender -m "v0.2: launch free job-based AI prompt recommender"
 ```
+
+## 지식 임베딩·학습 데이터·검색 챗봇
+
+실행 환경과 Sites 런타임에 OpenAI API 키가 설정되어 있지 않아, 실제 사용 방식은 `local-hash-ko-word-char-ngram-v1`입니다. 512차원 로컬 해싱 벡터이며 OpenAI 임베딩이나 학습된 신경망 모델이 아닙니다. 단어와 글자 2·3그램의 빈도를 FNV-1a 해시 버킷에 넣고 로그 가중치·L2 정규화를 적용합니다. 해시 충돌과 동의어 검색의 한계가 있습니다.
+
+- 원천: `brand/identity.md`, `voice.md`, `audience.md`, `content.md`, `server/products.json`의 상품 4개.
+- `node scripts/prepare-knowledge.mjs`: 문단·표 행 단위로 분리하고 변경 기록을 제외해 `server/knowledge-data.json`을 재생성합니다. 현재 30개 문단입니다. `npm run build` 전에 자동 실행합니다.
+- `knowledge_embeddings`: `id, source, title, chunk, model, dims, embedding, created_at`. 벡터는 JSON 숫자 배열로 저장합니다.
+- D1은 SQLite이므로 별도 스키마 대신 `agent_learning_` 접두어를 사용합니다. `agent_learning_goals`, `agent_learning_feedback`, `agent_learning_feedback_embeddings`를 외래키로 연결했습니다.
+- 목표 1개와 피드백 5개는 가상 테스트 데이터입니다. 실제 사용자 피드백이나 실제 성과 지표가 아닙니다. 목표에도 벡터를 저장하고, 피드백 벡터는 글 초안·평가·이유를 함께 벡터화합니다. 모델 재학습·자동 승격 기능은 없습니다.
+- 스키마만 Drizzle 마이그레이션으로 적용합니다. 공개 지식과 고정 샘플은 첫 홈페이지·새 페이지·지식 API 요청에서 서버가 멱등하게 DB에 저장합니다. 실패하면 다음 요청에서 재시도합니다. 샘플 등록으로 기존 주문은 바꾸지 않습니다.
+- `/admin/embeddings`, `/admin/learning`은 DB를 읽어 모델·차원·목록·벡터 앞 5개 값을 표시합니다. 학습 화면은 로그인 없는 테스트 데이터 전용 읽기 화면입니다. 향후 실제 피드백 입력 기능에는 별도의 접근 제어가 필요합니다.
+- `/api/chat`은 질문을 같은 방식으로 벡터화하고, 이번 빌드의 문단 ID에 해당하는 DB 벡터와 코사인 유사도를 비교해 상위 3개를 반환합니다. 외부 LLM은 사용하지 않습니다. 검색된 원문과 출처를 제시하며, 근거가 약하면 불확실함을 표시합니다. 유사도는 정답 확률이 아닙니다.
+- 채팅 질문은 검색 요청 처리 중 메모리에서만 사용합니다. 앱의 DB·파일·로그·브라우저 저장소에 기록하지 않으며, 외부 AI 서비스에 전송하지 않습니다. 요청은 POST 본문, 응답은 `Cache-Control: no-store`를 사용합니다. 페이지 이탈·새로고침 시 화면 내용을 지웁니다. 호스팅 플랫폼 자체의 운영 로그 정책과는 별개입니다.
+- 기존 주문 백업의 다섯 필드 허용 목록은 유지합니다. 환경변수나 결제 비밀값을 임베딩·학습 자료·챗봇 답변에 포함하지 않습니다.
+
+검증: `node scripts/prepare-knowledge.mjs --check`와 `node --test tests/*.test.mjs`. 실제 SQLite 스키마·벡터 저장·중복 방지·상품 근거 검색·범위 밖 질문·채팅 비저장을 확인합니다.
